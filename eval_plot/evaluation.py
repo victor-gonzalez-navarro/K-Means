@@ -49,6 +49,7 @@ def ploting_v(data_x, n_clusters, lista):
             ax = fig.add_subplot(n_features, n_features, suma)
             for i in range(n_clusters):
                 c = next(color)
-                ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], '*', 1, c= c)
+                #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
+                ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=4)
 
     plt.show()

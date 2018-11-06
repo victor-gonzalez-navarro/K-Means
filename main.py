@@ -3,17 +3,14 @@ import re
 import time
 
 import pandas as pd
+import numpy as np
 from scipy.io import arff
 
-from clust_alg.agglomerative import Agglomerative
-from clust_alg.kmeans import Kmeans
-from clust_alg.bisectingKmeans import BisectingKmeans
-from clust_alg.kmedoids import Kmedoids
-from clust_alg.pam import Pam
-from clust_alg.clarans import Clarans
-from clust_alg.fuzzyCMeans import FuzzyCMeans
 from eval_plot.evaluation import evaluate
+from eval_plot.evaluation import ploting_v
+from matplotlib import pyplot
 from preproc.preprocess import Preprocess
+from sklearn.preprocessing.label import LabelEncoder
 
 
 # ------------------------------------------------------------------------------------------------------- Read databases
@@ -41,6 +38,15 @@ def main():
     data1 = df1.values              # original data in a numpy array without labels
     load = Preprocess()
     data_x = load.preprocess_method(data1)
+    le = LabelEncoder()
+    le.fit(np.unique(groundtruth_labels))
+    groundtruth_labels = le.transform(groundtruth_labels)
+
+    print(len(data_x[:,0]))
+    #ploting_v (data_x, 2, groundtruth_labels)
+    #pyplot.scatter(data_x[:,0], data_x[:,1], s=4)
+    #pyplot.show()
+
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
