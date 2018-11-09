@@ -67,6 +67,9 @@ def main():
 
     ploting_v(transf_data_x, 2, groundtruth_labels)
 
+    reconstruct_data_x = np.dot(eig_vect.T, transf_data_x.T).T
+
+    ploting_v(reconstruct_data_x, 2, groundtruth_labels)
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
