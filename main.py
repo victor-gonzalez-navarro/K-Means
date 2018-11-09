@@ -13,6 +13,8 @@ from algorithms.methods import compute_covariance
 from algorithms.methods import proportion_of_variance
 from preproc.preprocess import Preprocess
 from sklearn.preprocessing.label import LabelEncoder
+from sklearn.decomposition import IncrementalPCA
+from sklearn.decomposition import PCA
 
 
 # ------------------------------------------------------------------------------------------------------- Read databases
@@ -44,7 +46,8 @@ def main():
     le.fit(np.unique(groundtruth_labels))
     groundtruth_labels = le.transform(groundtruth_labels)
 
-    cov_m = compute_covariance(data_x)
+    original_mean = np.mean(data_x, axis=0)
+    cov_m = compute_covariance(data_x, original_mean)
     print('The covariance matrix is:\n' + str(cov_m))
     eig_vals, eig_vect = np.linalg.eig(cov_m)
 
@@ -67,7 +70,7 @@ def main():
 
     ploting_v(transf_data_x, 2, groundtruth_labels)
 
-    reconstruct_data_x = np.dot(eig_vect.T, transf_data_x.T).T
+    reconstruct_data_x = np.dot(eig_vect.T, transf_data_x.T).T + original_mean
 
     ploting_v(reconstruct_data_x, 2, groundtruth_labels)
 

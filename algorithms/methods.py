@@ -1,12 +1,9 @@
 import numpy as np
 
-def compute_covariance(data_x):
-    mean_x = np.mean(data_x, axis=0)
+def compute_covariance(data_x, mean):
+    data_E = data_x - mean
 
-    cov_m = np.zeros((data_x.shape[1],data_x.shape[1]))
-    for i in range(data_x.shape[1]):
-        for j in range(data_x.shape[1]):
-            cov_m[i,j] = np.dot((data_x[:,i]-mean_x[i]).T,(data_x[:,j]-mean_x[j])) / data_x.shape[0]
+    cov_m = np.dot(data_E.T, data_E) / data_x.shape[0]
 
     return cov_m
 
