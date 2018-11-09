@@ -9,6 +9,8 @@ from scipy.io import arff
 from eval_plot.evaluation import evaluate
 from eval_plot.evaluation import ploting_v
 from matplotlib import pyplot
+from algorithms.methods import compute_covariance
+from algorithms.methods import proportion_of_variance
 from preproc.preprocess import Preprocess
 from sklearn.preprocessing.label import LabelEncoder
 
@@ -42,10 +44,28 @@ def main():
     le.fit(np.unique(groundtruth_labels))
     groundtruth_labels = le.transform(groundtruth_labels)
 
-    print(len(data_x[:,0]))
-    #ploting_v (data_x, 2, groundtruth_labels)
-    #pyplot.scatter(data_x[:,0], data_x[:,1], s=4)
-    #pyplot.show()
+    cov_m = compute_covariance(data_x)
+    print('The covariance matrix is:\n' + str(cov_m))
+    eig_vals, eig_vect = np.linalg.eig(cov_m)
+
+    print('The EigenValues are:\n' + str(eig_vals))
+    print('The EigenVectors are:\n' + str(eig_vect))
+
+    idxSort = eig_vals.argsort()[::-1]
+    eig_vals = eig_vals[idxSort]
+    eig_vect =eig_vect[idxSort]
+
+    k = proportion_of_variance(eig_vals, 0.95)
+
+    eig_vals = eig_vals[:k]
+    eig_vect = eig_vect[:k]
+
+    print('The ' + str(k) + ' first Sorted EigenValues are:\n' + str(eig_vals))
+    print('The ' + str(k) + ' first Sorted EigenVectors are:\n' + str(eig_vect))
+
+    transf_data_x = np.dot(eig_vect, data_x.T).T
+
+    ploting_v(transf_data_x, 2, groundtruth_labels)
 
 
 
