@@ -56,24 +56,33 @@ def main():
 
     idxSort = eig_vals.argsort()[::-1]
     eig_vals = eig_vals[idxSort]
-    eig_vect =eig_vect[idxSort]
+    eig_vect =eig_vect[:,idxSort]
 
-    k = proportion_of_variance(eig_vals, 0.95)
+    k = proportion_of_variance(eig_vals, 0.8)
 
     eig_vals = eig_vals[:k]
-    eig_vect = eig_vect[:k]
+    eig_vect = eig_vect[:,:k].T
 
     print('The ' + str(k) + ' first Sorted EigenValues are:\n' + str(eig_vals))
     print('The ' + str(k) + ' first Sorted EigenVectors are:\n' + str(eig_vect))
 
     transf_data_x = np.dot(eig_vect, data_x.T).T
 
-    ploting_v(transf_data_x, 2, groundtruth_labels)
+    #ploting_v(transf_data_x, 2, groundtruth_labels)
 
     reconstruct_data_x = np.dot(eig_vect.T, transf_data_x.T).T + original_mean
 
-    ploting_v(reconstruct_data_x, 2, groundtruth_labels)
+    #ploting_v(reconstruct_data_x, 2, groundtruth_labels)
 
+    pca = PCA(n_components=k)
+    data_original = pca.fit_transform(data_x)
+
+    ploting_v(data_original, 2, groundtruth_labels)
+
+    ccc = pca.components_
+
+    print('new')
+    print(eig_vect + ccc)
 
 # ----------------------------------------------------------------------------------------------------------------- Init
 if __name__ == '__main__':
