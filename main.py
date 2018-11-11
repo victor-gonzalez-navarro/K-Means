@@ -65,7 +65,7 @@ def main():
 
     # Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
-    transf_data_x_sklearn = pca.fit_transform(data_x)
+    # transf_data_x_sklearn = pca.fit_transform(data_x)
     # ploting_v(transf_data_x_sklearn, 2, groundtruth_labels)
 
     # Using a mix between our implementation and sklearn
@@ -79,8 +79,9 @@ def main():
 
     # Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
-    total_error = np.sum(error)
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(total_error))
+    total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
+        round(total_error,2)) + '%')
     identity_aproximation = np.dot(eig_vect, eig_vect.T)
 
 
