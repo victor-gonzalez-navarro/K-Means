@@ -48,41 +48,40 @@ def main():
 
     original_mean = np.mean(data_x, axis=0)
     cov_m = compute_covariance(data_x, original_mean)
-    print('The covariance matrix is:\n' + str(cov_m))
     eig_vals, eig_vect = np.linalg.eig(cov_m)
-
-    print('The EigenValues are:\n' + str(eig_vals))
-    print('The EigenVectors are:\n' + str(eig_vect))
 
     idxSort = eig_vals.argsort()[::-1]
     eig_vals = eig_vals[idxSort]
     eig_vect =eig_vect[:,idxSort]
 
-    k = proportion_of_variance(eig_vals, 0.8)
+    k = proportion_of_variance(eig_vals, 0.95)
 
     eig_vals = eig_vals[:k]
-    eig_vect = eig_vect[:,:k].T
+    eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
 
-    print('The ' + str(k) + ' first Sorted EigenValues are:\n' + str(eig_vals))
-    print('The ' + str(k) + ' first Sorted EigenVectors are:\n' + str(eig_vect))
+    # Using our implementation of PCA
+    transf_data_x = np.dot((eig_vect.T), (data_x-original_mean).T).T
+    # ploting_v(transf_data_x, 2, groundtruth_labels)
 
-    transf_data_x = np.dot(eig_vect, data_x.T).T
-
-    #ploting_v(transf_data_x, 2, groundtruth_labels)
-
-    reconstruct_data_x = np.dot(eig_vect.T, transf_data_x.T).T + original_mean
-
-    #ploting_v(reconstruct_data_x, 2, groundtruth_labels)
-
+    # Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
-    data_original = pca.fit_transform(data_x)
+    transf_data_x_sklearn = pca.fit_transform(data_x)
+    # ploting_v(transf_data_x_sklearn, 2, groundtruth_labels)
 
-    ploting_v(data_original, 2, groundtruth_labels)
+    # Using a mix between our implementation and sklearn
+    # ccc = pca.components_.T
+    # transf_data_x_mix = np.dot(pca.components_, data_x.T).T
+    # ploting_v(transf_data_x_mix, 2, groundtruth_labels)
 
-    ccc = pca.components_
+    # Reconstruct data
+    reconstruct_data_x = np.dot(eig_vect, transf_data_x.T) + original_mean
 
-    print('new')
-    print(eig_vect + ccc)
+    # Error between original data and reconstruct data
+    error = reconstruct_data_x-data_x
+    total_error = np.sum(error)
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(total_error))
+    identity_aproximation = np.dot(eig_vect, eig_vect.T)
+
 
 # ----------------------------------------------------------------------------------------------------------------- Init
 if __name__ == '__main__':
