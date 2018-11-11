@@ -74,7 +74,8 @@ def main():
     # ploting_v(transf_data_x_mix, 2, groundtruth_labels)
 
     # Reconstruct data
-    reconstruct_data_x = np.dot(eig_vect, transf_data_x.T) + original_mean
+    reconstruct_data_x = np.dot(eig_vect, transf_data_x.T)
+    reconstruct_data_x = reconstruct_data_x.T + original_mean
 
     # Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
