@@ -46,6 +46,8 @@ def main():
     le.fit(np.unique(groundtruth_labels))
     groundtruth_labels = le.transform(groundtruth_labels)
 
+    num_clusters = len(np.unique(groundtruth_labels)) # Number of different labels
+
     original_mean = np.mean(data_x, axis=0)
     cov_m = compute_covariance(data_x, original_mean)
     eig_vals, eig_vect = np.linalg.eig(cov_m)
@@ -61,17 +63,10 @@ def main():
 
     # Using our implementation of PCA
     transf_data_x = np.dot((eig_vect.T), (data_x-original_mean).T).T
-    # ploting_v(transf_data_x, 2, groundtruth_labels)
 
     # Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
-    # transf_data_x_sklearn = pca.fit_transform(data_x)
-    # ploting_v(transf_data_x_sklearn, 2, groundtruth_labels)
-
-    # Using a mix between our implementation and sklearn
-    # ccc = pca.components_.T
-    # transf_data_x_mix = np.dot(pca.components_, data_x.T).T
-    # ploting_v(transf_data_x_mix, 2, groundtruth_labels)
+    transf_data_x_sklearn = pca.fit_transform(data_x)
 
     # Reconstruct data
     reconstruct_data_x = np.dot(eig_vect, transf_data_x.T)
@@ -82,7 +77,14 @@ def main():
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
     print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
         round(total_error,2)) + '%')
-    identity_aproximation = np.dot(eig_vect, eig_vect.T)
+    # identity_aproximation = np.dot(eig_vect, eig_vect.T)
+
+    # Plottings
+    ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
+    ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
+    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
+
+
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
