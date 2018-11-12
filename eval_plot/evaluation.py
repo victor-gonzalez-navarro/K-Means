@@ -50,6 +50,6 @@ def ploting_v(data_x, n_clusters, lista):
             for i in range(n_clusters):
                 c = next(color)
                 #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
-                ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=3)
+                ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=3, c= c)
 
     plt.show()
