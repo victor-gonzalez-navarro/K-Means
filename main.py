@@ -61,28 +61,61 @@ def main():
     eig_vals = eig_vals[:k]
     eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
 
-    # Using our implementation of PCA
+    # -----------------------------------------------------------------------
+    # A1) Using our implementation of PCA
     transf_data_x = np.dot((eig_vect.T), (data_x-original_mean).T).T
 
-    # Using the PCA implementation of sklearn
+    # B1) Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
     transf_data_x_sklearn = pca.fit_transform(data_x)
 
-    # Reconstruct data
+    # C1) Using the incremental PCA implementation of sklearn
+    incrementalpca = IncrementalPCA(n_components=k)
+    transf_data_x_sklearn2 = incrementalpca.fit_transform(data_x)
+
+    # --------------------------------------------------------------------------------------------
+    # A2) Reconstruct data with our method
     reconstruct_data_x = np.dot(eig_vect, transf_data_x.T)
     reconstruct_data_x = reconstruct_data_x.T + original_mean
 
-    # Error between original data and reconstruct data
+    # B2) Reconstruct data with PCA sklearn
+    reconstruct_data_x1 = np.dot(pca.components_.T, transf_data_x_sklearn.T)
+    reconstruct_data_x1 = reconstruct_data_x1.T + original_mean
+
+    # C2) Reconstruct data with incremental PCA sklearn
+    reconstruct_data_x2 = np.dot(incrementalpca.components_.T, transf_data_x_sklearn2.T)
+    reconstruct_data_x2 = reconstruct_data_x2.T + original_mean
+
+    # ----------------------------------------------------------------------------------------------
+    # A3) Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
     print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
         round(total_error,2)) + '%')
     # identity_aproximation = np.dot(eig_vect, eig_vect.T)
 
+    # B3) Error between original data and reconstruct data 1
+    error1 = reconstruct_data_x1-data_x
+    total_error1 = (np.sum(abs(error1))/np.sum(abs(data_x)))*100
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
+        round(total_error1,2)) + '%')
+
+    # C3) Error between original data and reconstruct data 2
+    error2 = reconstruct_data_x2-data_x
+    total_error2 = (np.sum(abs(error2))/np.sum(abs(data_x)))*100
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
+        round(total_error2,2)) + '%')
+
+    # -----------------------------------------------------------------------------------------------
+
     # Plottings
+    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
     ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
     ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
     ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
+    ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of
+    # sklearn
+
 
 
 
