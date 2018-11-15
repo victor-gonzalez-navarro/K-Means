@@ -8,6 +8,7 @@ from scipy.io import arff
 
 from eval_plot.evaluation import evaluate
 from eval_plot.evaluation import ploting_v
+from eval_plot.evaluation import ploting_v3d
 from matplotlib import pyplot
 from algorithms.methods import compute_covariance
 from algorithms.methods import proportion_of_variance
@@ -57,6 +58,7 @@ def main():
     eig_vect =eig_vect[:,idxSort]
 
     k = proportion_of_variance(eig_vals, 0.95)
+    k = 3
 
     eig_vals = eig_vals[:k]
     eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
@@ -108,13 +110,15 @@ def main():
 
     # -----------------------------------------------------------------------------------------------
 
-    # Plottings
-    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-    ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
-    ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
-    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-    ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of
-    # sklearn
+    # Plottings: scatter plots
+    # ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
+    # ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
+    # ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
+    # ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation
+    # of sk
+
+    # Plottings: 3D plots
+    ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
 
 
 

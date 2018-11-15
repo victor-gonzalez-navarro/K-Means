@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 from sklearn import metrics as mt
+from mpl_toolkits.mplot3d import Axes3D
 
 # To evaluate the clustering algorithms
 def evaluate(labels_method, groundtruth_labels, data_x = None):
@@ -53,3 +54,27 @@ def ploting_v(data_x, n_clusters, lista):
                 ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=3, c= c)
 
     plt.show()
+
+# Plot the data in a 3 dimensional space
+def ploting_v3d(data_x, n_clusters, lista):
+    n_features = data_x.shape[1]
+    if n_features != 3:
+        print('This plot should be done only when we have 3 features. Otherwise, we select the first three features.')
+
+    wh = []
+    for i in range(n_clusters):
+        wh.append(np.argwhere(np.array(lista) == i))
+
+    fig = plt.figure()
+    color = iter(cm.rainbow(np.linspace(0, 1, n_clusters)))
+    ax = Axes3D(fig)
+    for i in range(n_clusters):
+        c = next(color)
+        #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
+        aaa = data_x[wh[i], 0]
+        bbb = data_x[wh[i], 1]
+        ddd = data_x[wh[i], 2]
+        ax.scatter(aaa, bbb, ddd, c=c)
+
+    plt.show()
+
