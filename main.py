@@ -57,8 +57,7 @@ def main():
     eig_vals = eig_vals[idxSort]
     eig_vect =eig_vect[:,idxSort]
 
-    k = proportion_of_variance(eig_vals, 0.95)
-    k = 3
+    k = proportion_of_variance(eig_vals, 0.9)
 
     eig_vals = eig_vals[:k]
     eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
@@ -119,7 +118,7 @@ def main():
     # ----------------------------------------------------------------------------------------------------------3D plots
     # Plottings: 3D plots
     ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
-    # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with our labels obtained with kmeans
+    # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with the labels obtained with our kmeans
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
