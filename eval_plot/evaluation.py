@@ -52,14 +52,17 @@ def ploting_v(data_x, n_clusters, lista):
                 c = next(color)
                 #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
                 ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=3, c= c)
+                ax.xaxis.tick_top()
+                ax.yaxis.tick_right()
+                plt.xlabel("Feature "+str(k1+1))
+                plt.ylabel("Feature "+str(k2+1))
 
+    plt.tight_layout()
     plt.show()
 
 # Plot the data in a 3 dimensional space
 def ploting_v3d(data_x, n_clusters, lista):
     n_features = data_x.shape[1]
-    if n_features != 3:
-        print('This plot should be done only when we have 3 features. Otherwise, we select the first three features.')
 
     wh = []
     for i in range(n_clusters):
@@ -75,6 +78,9 @@ def ploting_v3d(data_x, n_clusters, lista):
         bbb = data_x[wh[i], 1]
         ddd = data_x[wh[i], 2]
         ax.scatter(aaa, bbb, ddd, c=c)
+        plt.xlabel("Feature 1")
+        plt.ylabel("Feature 2")
+        ax.set_zlabel('Feature 3')
 
     plt.show()
 

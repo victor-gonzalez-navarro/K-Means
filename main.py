@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import numpy as np
 from scipy.io import arff
+import matplotlib.pyplot as plt
 
 from eval_plot.evaluation import evaluate
 from eval_plot.evaluation import ploting_v
@@ -16,6 +17,7 @@ from preproc.preprocess import Preprocess
 from sklearn.preprocessing.label import LabelEncoder
 from sklearn.decomposition import IncrementalPCA
 from sklearn.decomposition import PCA
+
 
 
 # ------------------------------------------------------------------------------------------------------- Read databases
@@ -49,6 +51,7 @@ def main():
 
     num_clusters = len(np.unique(groundtruth_labels)) # Number of different labels
 
+    # -------------------------------------------------------------------------------Compute covariance and eigenvectors
     original_mean = np.mean(data_x, axis=0)
     cov_m = compute_covariance(data_x, original_mean)
     eig_vals, eig_vect = np.linalg.eig(cov_m)
@@ -57,14 +60,17 @@ def main():
     eig_vals = eig_vals[idxSort]
     eig_vect =eig_vect[:,idxSort]
 
-    k = proportion_of_variance(eig_vals, 0.9)
+    # ---------------------------------------------------------------------Decide the number of features we want to keep
+    prop_variance = 0.9
+    k = proportion_of_variance(eig_vals, prop_variance)
+    print('\nThe value of K selected to obtain a proportion of variance = '+str(prop_variance) +' is: '+str(k)+'\n')
 
-    eig_vals = eig_vals[:k]
-    eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
+    eig_vals_red = eig_vals[:k]
+    eig_vect_red = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
 
     # ---------------------------------------------------------------------------------Reduce dimensionality of the data
     # A1) Using our implementation of PCA
-    transf_data_x = np.dot((eig_vect.T), (data_x-original_mean).T).T
+    transf_data_x = np.dot((eig_vect_red.T), (data_x-original_mean).T).T
 
     # B1) Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
@@ -76,7 +82,7 @@ def main():
 
     # --------------------------------------------------------------------------------------------------Reconstruct data
     # A2) Reconstruct data with our method
-    reconstruct_data_x = np.dot(eig_vect, transf_data_x.T)
+    reconstruct_data_x = np.dot(eig_vect_red, transf_data_x.T)
     reconstruct_data_x = reconstruct_data_x.T + original_mean
 
     # B2) Reconstruct data with PCA sklearn
@@ -91,34 +97,40 @@ def main():
     # A3) Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
-        round(total_error,2)) + '%')
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
+        round(total_error,2)) + '%' +'\033[0m'+' [using our implementation of PCA]')
     # identity_aproximation = np.dot(eig_vect, eig_vect.T)
 
     # B3) Error between original data and reconstruct data 1
     error1 = reconstruct_data_x1-data_x
     total_error1 = (np.sum(abs(error1))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
-        round(total_error1,2)) + '%')
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
+        round(total_error1,2)) +'%' +'\033[0m'+' [using pca.fit_transform of Sklearn]')
 
     # C3) Error between original data and reconstruct data 2
     error2 = reconstruct_data_x2-data_x
     total_error2 = (np.sum(abs(error2))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
-        round(total_error2,2)) + '%')
+    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
+        round(total_error2,2)) + '%' +'\033[0m'+' [using incrementalpca.fit_transform of Sklearn]')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
-    # Plottings: scatter plots
-    ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
-    ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
-    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-    ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of sk
+    ploting_boolean = True;
+    if ploting_boolean:
+        # Plot eigenvector
+        plt.plot(eig_vals, 'ro-', linewidth=2, markersize=6);
+        plt.title('Magnitude of the eigenvalues')
+        plt.show()
 
+        # Plottings: scatter plots
+        ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
+        ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
+        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
+        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of sk
 
-    # ----------------------------------------------------------------------------------------------------------3D plots
-    # Plottings: 3D plots
-    ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
-    # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with the labels obtained with our kmeans
+        # ------------------------------------------------------------------------------------------------------3D plots
+        # Plottings: 3D plots
+        ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
+        # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with the labels obtained with our kmeans
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
