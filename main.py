@@ -134,6 +134,7 @@ def main():
     '94m'+str(round(total_error2,2)) + '%' +'\033[0m'+' [using incrementalpca.fit_transform of Sklearn]')
 
     # ------------------------------------------------------------------------------Kmeans with dimensionality reduction
+    print('-----------------------------------------------------------------------------------------------------------')
     tester_kmeans(data_x, groundtruth_labels)
     # We could renormalize the data again to improve the performance of the Kmeans algorithm
     print('-----------------------------------------------------------------------------------------------------------')
