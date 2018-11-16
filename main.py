@@ -119,7 +119,7 @@ def main():
 
     # Plottings: 3D plots
     ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
-
+    # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with our labels obtained with kmeans
 
 
 
