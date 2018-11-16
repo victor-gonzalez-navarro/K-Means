@@ -63,7 +63,7 @@ def main():
     eig_vals = eig_vals[:k]
     eig_vect = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
 
-    # -----------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------Reduce dimensionality of the data
     # A1) Using our implementation of PCA
     transf_data_x = np.dot((eig_vect.T), (data_x-original_mean).T).T
 
@@ -75,7 +75,7 @@ def main():
     incrementalpca = IncrementalPCA(n_components=k)
     transf_data_x_sklearn2 = incrementalpca.fit_transform(data_x)
 
-    # --------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------Reconstruct data
     # A2) Reconstruct data with our method
     reconstruct_data_x = np.dot(eig_vect, transf_data_x.T)
     reconstruct_data_x = reconstruct_data_x.T + original_mean
@@ -88,7 +88,7 @@ def main():
     reconstruct_data_x2 = np.dot(incrementalpca.components_.T, transf_data_x_sklearn2.T)
     reconstruct_data_x2 = reconstruct_data_x2.T + original_mean
 
-    # ----------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------Error between original data and reconstructed data
     # A3) Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
@@ -108,20 +108,18 @@ def main():
     print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+str(
         round(total_error2,2)) + '%')
 
-    # -----------------------------------------------------------------------------------------------
-
+    # -----------------------------------------------------------------------------------------------------Scatter plots
     # Plottings: scatter plots
-    # ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
-    # ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
-    # ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-    # ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation
-    # of sk
+    ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
+    ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
+    ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
+    ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of sk
 
+
+    # ----------------------------------------------------------------------------------------------------------3D plots
     # Plottings: 3D plots
     ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
     # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with our labels obtained with kmeans
-
-
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
