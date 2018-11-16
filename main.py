@@ -53,20 +53,23 @@ def main():
 
     # -------------------------------------------------------------------------------Compute covariance and eigenvectors
     original_mean = np.mean(data_x, axis=0)
+    data_x = data_x-original_mean  # Substracting the mean of the data
+    original_mean = np.mean(data_x, axis=0)  # Recomputing the mean (checkpoint to check if it is 0 for each feature)
+
     cov_m = compute_covariance(data_x, original_mean)
     eig_vals, eig_vect = np.linalg.eig(cov_m)
 
-    idxSort = eig_vals.argsort()[::-1]
-    eig_vals = eig_vals[idxSort]
-    eig_vect =eig_vect[:,idxSort]
+    idxsort = eig_vals.argsort()[::-1]
+    eig_vals = eig_vals[idxsort]
+    eig_vect = eig_vect[:,idxsort]
 
     # ---------------------------------------------------------------------Decide the number of features we want to keep
     prop_variance = 0.9
     k = proportion_of_variance(eig_vals, prop_variance)
-    print('\nThe value of K selected to obtain a proportion of variance = '+str(prop_variance) +' is: '+str(k)+'\n')
+    print('\nThe value of K selected to obtain a proportion of variance = '+str(prop_variance) +' is: ' + str(k)+'\n')
 
     eig_vals_red = eig_vals[:k]
-    eig_vect_red = eig_vect[:,:k] # Eigenvectors are in columns (8xk)
+    eig_vect_red = eig_vect[:,:k]  # Eigenvectors are in columns (8xk)
 
     # ---------------------------------------------------------------------------------Reduce dimensionality of the data
     # A1) Using our implementation of PCA
@@ -97,27 +100,28 @@ def main():
     # A3) Error between original data and reconstruct data
     error = reconstruct_data_x-data_x
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
-        round(total_error,2)) + '%' +'\033[0m'+' [using our implementation of PCA]')
+    print('The relative error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033['
+    '94m'+str(round(total_error,2)) + '%' +'\033[0m'+' [using our implementation of PCA]')
     # identity_aproximation = np.dot(eig_vect, eig_vect.T)
 
     # B3) Error between original data and reconstruct data 1
     error1 = reconstruct_data_x1-data_x
     total_error1 = (np.sum(abs(error1))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
-        round(total_error1,2)) +'%' +'\033[0m'+' [using pca.fit_transform of Sklearn]')
+    print('The relative error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033['
+    '94m'+str(round(total_error1,2)) +'%' +'\033[0m'+' [using pca.fit_transform of Sklearn]')
 
     # C3) Error between original data and reconstruct data 2
     error2 = reconstruct_data_x2-data_x
     total_error2 = (np.sum(abs(error2))/np.sum(abs(data_x)))*100
-    print('The total error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033[94m'+str(
-        round(total_error2,2)) + '%' +'\033[0m'+' [using incrementalpca.fit_transform of Sklearn]')
+    print('The relative error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033['
+    '94m'+str(round(total_error2,2)) + '%' +'\033[0m'+' [using incrementalpca.fit_transform of Sklearn]')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
-    ploting_boolean = True;
+    ploting_boolean = True
+
     if ploting_boolean:
         # Plot eigenvector
-        plt.plot(eig_vals, 'ro-', linewidth=2, markersize=6);
+        plt.plot(eig_vals, 'ro-', linewidth=2, markersize=6)
         plt.title('Magnitude of the eigenvalues')
         plt.show()
 
