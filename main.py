@@ -53,7 +53,7 @@ def main():
     arffs_dic = obtain_arffs('./datasets/')
 
     # Extract an specific database
-    dataset_name = 'hypothyroid'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
+    dataset_name = 'waveform'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
     dat1 = arffs_dic[dataset_name]
     df1 = pd.DataFrame(dat1[0])     # original data in pandas dataframe
     groundtruth_labels = df1[df1.columns[len(df1.columns)-1]].values  # original labels in a numpy array
@@ -152,7 +152,8 @@ def main():
     print('\n---------------------------------------------------------------------------------------------------------')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
-    ploting_boolean = False
+    ploting_boolean = True
+    plot_scatters = False  # only change to True for a database with not too many features (like breast-w)
 
     if ploting_boolean:
         # Plot eigenvector
@@ -160,17 +161,18 @@ def main():
         plt.title('Magnitude of the eigenvalues')
         plt.show()
 
-        # Plottings: scatter plots
-        # Original data with groundtruth labels
-        ploting_v(data_x, num_clusters, groundtruth_labels, 'original data with groundtruth labels')
-        # Transfomed data with our implementation of PCA and with groundtruth labels
-        ploting_v(transf_data_x, num_clusters, groundtruth_labels, 'transformed data (our PCA) with groundtruth '
-                                                                   'labels')
-        # Transfomed data with pca.fit_transform and with groundtruth labels
-        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v1) '
-                                                                           'with groundtruth labels')
-        # Transfomed data with incrementalpca.fit_transform and with groundtruth labels
-        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v2) '
+        if plot_scatters:
+            # Plottings: scatter plots
+            # Original data with groundtruth labels
+            ploting_v(data_x, num_clusters, groundtruth_labels, 'original data with groundtruth labels')
+            # Transfomed data with our implementation of PCA and with groundtruth labels
+            ploting_v(transf_data_x, num_clusters, groundtruth_labels, 'transformed data (our PCA) with groundtruth '
+                                                                       'labels')
+            # Transfomed data with pca.fit_transform and with groundtruth labels
+            ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v1) '
+                                                                               'with groundtruth labels')
+            # Transfomed data with incrementalpca.fit_transform and with groundtruth labels
+            ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v2) '
                                                                             'with groundtruth labels')
 
         # ------------------------------------------------------------------------------------------------------3D plots
