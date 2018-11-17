@@ -53,7 +53,7 @@ def main():
     arffs_dic = obtain_arffs('./datasets/')
 
     # Extract an specific database
-    dataset_name = 'breast-w'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
+    dataset_name = 'hypothyroid'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
     dat1 = arffs_dic[dataset_name]
     df1 = pd.DataFrame(dat1[0])     # original data in pandas dataframe
     groundtruth_labels = df1[df1.columns[len(df1.columns)-1]].values  # original labels in a numpy array
@@ -63,6 +63,7 @@ def main():
     data1 = df1.values              # original data in a numpy array without labels
     load = Preprocess()
     data_x = load.preprocess_method(data1)
+    data_x = data_x.astype(np.float64)
     le = LabelEncoder()
     le.fit(np.unique(groundtruth_labels))
     groundtruth_labels = le.transform(groundtruth_labels)
@@ -92,6 +93,7 @@ def main():
     # ---------------------------------------------------------------------------------Reduce dimensionality of the data
     # A1) Using our implementation of PCA
     transf_data_x = np.dot((eig_vect_red.T), (data_x-original_mean).T).T
+    transf_data_x = transf_data_x.real
 
     # B1) Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
@@ -138,7 +140,6 @@ def main():
     print('\n---------------------------------------------------------------------------------------------------------')
     print('K-MEANS APPLIED TO THE ORIGINAL DATA')
     tester_kmeans(data_x, groundtruth_labels)
-    # We could renormalize the data again to improve the performance of the Kmeans algorithm
     print('\n---------------------------------------------------------------------------------------------------------')
     print('K-MEANS APPLIED TO THE TRANSFORMED DATA USING OUR IMPLEMENTATION OF PCA')
     labels = tester_kmeans(transf_data_x, groundtruth_labels)
@@ -151,7 +152,7 @@ def main():
     print('\n---------------------------------------------------------------------------------------------------------')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
-    ploting_boolean = True
+    ploting_boolean = False
 
     if ploting_boolean:
         # Plot eigenvector
