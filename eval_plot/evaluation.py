@@ -79,6 +79,6 @@ def ploting_v3d(data_x, n_clusters, lista, title):
         plt.ylabel("Feature 2")
         ax.set_zlabel('Feature 3')
 
-    plt.title('3 Dimensional Plot of '+title)
+    plt.title('3 Dimensional Plot of '+title, size=16)
     plt.show()
 
