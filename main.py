@@ -175,6 +175,8 @@ def main():
         ploting_v3d(data_x, 1, np.zeros(len(groundtruth_labels)), 'original data without labels')
         # Original data with groundtruth labels
         ploting_v3d(data_x, num_clusters, groundtruth_labels, 'original data with groundtruth labels')
+        # Reconstructed data without labels
+        ploting_v3d(reconstruct_data_x, 1, np.zeros(len(groundtruth_labels)), 'reconstructed data without labels')
         # Transfomed data with our implementation of PCA and without labels
         ploting_v3d(transf_data_x, 1, np.zeros(len(groundtruth_labels)), 'transformed data without labels')
         # Transfomed data with our implementation of PCA and with groundtruth_labels
