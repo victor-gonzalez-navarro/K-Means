@@ -160,20 +160,27 @@ def main():
         plt.show()
 
         # Plottings: scatter plots
-        ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
-        ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
-        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA
-        # implementation of sk
+        # Original data with groundtruth labels
+        ploting_v(data_x, num_clusters, groundtruth_labels)
+        # Transfomed data with our implementation of PCA and with groundtruth labels
+        ploting_v(transf_data_x, num_clusters, groundtruth_labels)
+        # Transfomed data with pca.fit_transform and with groundtruth labels
+        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels)
+        # Transfomed data with incrementalpca.fit_transform and with groundtruth labels
+        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels)
 
         # ------------------------------------------------------------------------------------------------------3D plots
         # Plottings: 3D plots
-        ploting_v3d(transf_data_x, 1, np.zeros(len(groundtruth_labels)), 'without labels') # Transfomed data with no
-        # labels
-        ploting_v3d(transf_data_x, num_clusters, groundtruth_labels, 'with groundtruth labels') # Transfomed data with
-        # groundtruth_labels
-        ploting_v3d(transf_data_x, num_clusters, labels, 'with labels from K-means') # Transfomed data with
-        # the labels obtained with our kmeans
+        # Original data without labels
+        ploting_v3d(data_x, 1, np.zeros(len(groundtruth_labels)), 'original data without labels')
+        # Original data with groundtruth labels
+        ploting_v3d(data_x, num_clusters, groundtruth_labels, 'original data with groundtruth labels')
+        # Transfomed data with our implementation of PCA and without labels
+        ploting_v3d(transf_data_x, 1, np.zeros(len(groundtruth_labels)), 'transformed data without labels')
+        # Transfomed data with our implementation of PCA and with groundtruth_labels
+        ploting_v3d(transf_data_x, num_clusters, groundtruth_labels, 'transformed data with groundtruth labels')
+        # Transfomed data with our implementation of PCA and with the labels obtained with our K-means
+        ploting_v3d(transf_data_x, num_clusters, labels, 'transformed data with labels from our K-means')
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init

@@ -50,7 +50,6 @@ def ploting_v(data_x, n_clusters, lista):
             ax = fig.add_subplot(n_features, n_features, suma)
             for i in range(n_clusters):
                 c = next(color)
-                #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
                 ax.scatter(data_x[wh[i], k1], data_x[wh[i], k2], s=3, c= c)
                 ax.xaxis.tick_top()
                 ax.yaxis.tick_right()
@@ -79,6 +78,6 @@ def ploting_v3d(data_x, n_clusters, lista, title):
         plt.ylabel("Feature 2")
         ax.set_zlabel('Feature 3')
 
-    plt.title('3 Dimensional Plot of transformed data '+title)
+    plt.title('3 Dimensional Plot of '+title)
     plt.show()
 
