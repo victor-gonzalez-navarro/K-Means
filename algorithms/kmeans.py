@@ -58,7 +58,7 @@ class Kmeans:
 
             # Compute SSE for that specific iteration
             SSE = np.sum(np.min(resta, axis=1))
-            print('SSE in iteration ' + str(iterations) + ' is: ' + str(round(SSE,2)))
+            # print('SSE in iteration ' + str(iterations) + ' is: ' + str(round(SSE,2)))
 
             # Assign each data to its closest centroid
             lista = np.argmin(resta, axis=1)

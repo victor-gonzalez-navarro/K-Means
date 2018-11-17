@@ -57,11 +57,12 @@ def ploting_v(data_x, n_clusters, lista):
                 plt.xlabel("Feature "+str(k1+1))
                 plt.ylabel("Feature "+str(k2+1))
 
+    plt.title('Scatter Plot')
     plt.tight_layout()
     plt.show()
 
 # Plot the data in a 3 dimensional space
-def ploting_v3d(data_x, n_clusters, lista):
+def ploting_v3d(data_x, n_clusters, lista, title):
     n_features = data_x.shape[1]
 
     wh = []
@@ -73,14 +74,11 @@ def ploting_v3d(data_x, n_clusters, lista):
     ax = Axes3D(fig)
     for i in range(n_clusters):
         c = next(color)
-        #ax.plot(data_x[wh[i], k1], data_x[wh[i], k2], ',', 1, c= c)
-        aaa = data_x[wh[i], 0]
-        bbb = data_x[wh[i], 1]
-        ddd = data_x[wh[i], 2]
-        ax.scatter(aaa, bbb, ddd, c=c)
+        ax.scatter(data_x[wh[i], 0], data_x[wh[i], 1], data_x[wh[i], 2], c=c)
         plt.xlabel("Feature 1")
         plt.ylabel("Feature 2")
         ax.set_zlabel('Feature 3')
 
+    plt.title('3 Dimensional Plot of transformed data '+title)
     plt.show()
 

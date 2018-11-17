@@ -36,7 +36,7 @@ def tester_kmeans(data_x, groundtruth_labels):
     num_tries_init = 1      # Number of different initializations of the centroids
     max_iterations = 6     # Number of iterations for each initialization
 
-    print('\n' + '\033[1m' + 'Chosen HYPERPARAMETERS: ' + '\033[0m'+'\nNumber of clusters: '+str(
+    print('\033[1m' + 'Chosen HYPERPARAMETERS: ' + '\033[0m'+'\nNumber of clusters: '+str(
         num_clusters)+'\nNumber of different initilizations: '+str(num_tries_init)+'\nMaximum number of iterations '
                                                                             'per initialization: '+str(max_iterations))
 
@@ -45,6 +45,7 @@ def tester_kmeans(data_x, groundtruth_labels):
     tst2.kmeans_method(data_x)
     print('Running time: %s seconds' % round(time.time() - start_time, 4))
     evaluate(tst2.labels_km, groundtruth_labels, data_x)
+    return tst2.labels_km
 
 # ----------------------------------------------------------------------------------------------------------------- Main
 def main():
@@ -70,8 +71,8 @@ def main():
 
     # -------------------------------------------------------------------------------Compute covariance and eigenvectors
     original_mean = np.mean(data_x, axis=0)
-    #data_x = data_x-original_mean  # Substracting the mean of the data
-    #original_mean = np.mean(data_x, axis=0)  # Recomputing the mean (checkpoint to check if it is 0 for each feature)
+    # data_x = data_x-original_mean  # Substracting the mean of the data
+    # original_mean = np.mean(data_x, axis=0)  # Recomputing the mean (checkpoint to check if it is 0 for each feature)
 
     cov_m = compute_covariance(data_x, original_mean)
     eig_vals, eig_vect = np.linalg.eig(cov_m)
@@ -134,16 +135,20 @@ def main():
     '94m'+str(round(total_error2,2)) + '%' +'\033[0m'+' [using incrementalpca.fit_transform of Sklearn]')
 
     # ------------------------------------------------------------------------------Kmeans with dimensionality reduction
-    print('-----------------------------------------------------------------------------------------------------------')
+    print('\n---------------------------------------------------------------------------------------------------------')
+    print('K-MEANS APPLIED TO THE ORIGINAL DATA')
     tester_kmeans(data_x, groundtruth_labels)
     # We could renormalize the data again to improve the performance of the Kmeans algorithm
-    print('-----------------------------------------------------------------------------------------------------------')
-    tester_kmeans(transf_data_x, groundtruth_labels)
-    print('-----------------------------------------------------------------------------------------------------------')
+    print('\n---------------------------------------------------------------------------------------------------------')
+    print('K-MEANS APPLIED TO THE TRANSFORMED DATA USING OUR IMPLEMENTATION OF PCA')
+    labels = tester_kmeans(transf_data_x, groundtruth_labels)
+    print('\n---------------------------------------------------------------------------------------------------------')
+    print('K-MEANS APPLIED TO THE TRANSFORMED DATA USING pca.fit_transform OF SKLEARN')
     tester_kmeans(transf_data_x_sklearn, groundtruth_labels)
-    print('-----------------------------------------------------------------------------------------------------------')
+    print('\n---------------------------------------------------------------------------------------------------------')
+    print('K-MEANS APPLIED TO THE TRANSFORMED DATA USING incrementalpca.fit_transform OF SKLEARN')
     tester_kmeans(transf_data_x_sklearn2, groundtruth_labels)
-    print('-----------------------------------------------------------------------------------------------------------')
+    print('\n---------------------------------------------------------------------------------------------------------')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
     ploting_boolean = True
@@ -158,12 +163,17 @@ def main():
         ploting_v(data_x, num_clusters, groundtruth_labels) # Original data
         ploting_v(transf_data_x, num_clusters, groundtruth_labels) # Using our implementation of PCA
         ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels) # Using the PCA implementation of sklearn
-        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA implementation of sk
+        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels) # Using the incremenatl PCA
+        # implementation of sk
 
         # ------------------------------------------------------------------------------------------------------3D plots
         # Plottings: 3D plots
-        ploting_v3d(transf_data_x, num_clusters, groundtruth_labels) # Transfomed data with groundtruth_labels
-        # ploting_v3d(transf_data_x, num_clusters, labels) # Transfomed data with the labels obtained with our kmeans
+        ploting_v3d(transf_data_x, 1, np.zeros(len(groundtruth_labels)), 'without labels') # Transfomed data with no
+        # labels
+        ploting_v3d(transf_data_x, num_clusters, groundtruth_labels, 'with groundtruth labels') # Transfomed data with
+        # groundtruth_labels
+        ploting_v3d(transf_data_x, num_clusters, labels, 'with labels from K-means') # Transfomed data with
+        # the labels obtained with our kmeans
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init
