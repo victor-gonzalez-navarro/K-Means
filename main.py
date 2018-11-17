@@ -161,13 +161,16 @@ def main():
 
         # Plottings: scatter plots
         # Original data with groundtruth labels
-        ploting_v(data_x, num_clusters, groundtruth_labels)
+        ploting_v(data_x, num_clusters, groundtruth_labels, 'original data with groundtruth labels')
         # Transfomed data with our implementation of PCA and with groundtruth labels
-        ploting_v(transf_data_x, num_clusters, groundtruth_labels)
+        ploting_v(transf_data_x, num_clusters, groundtruth_labels, 'transformed data (our PCA) with groundtruth '
+                                                                   'labels')
         # Transfomed data with pca.fit_transform and with groundtruth labels
-        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels)
+        ploting_v(transf_data_x_sklearn, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v1) '
+                                                                           'with groundtruth labels')
         # Transfomed data with incrementalpca.fit_transform and with groundtruth labels
-        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels)
+        ploting_v(transf_data_x_sklearn2, num_clusters, groundtruth_labels, 'transformed data (Sklearn PCA v2) '
+                                                                            'with groundtruth labels')
 
         # ------------------------------------------------------------------------------------------------------3D plots
         # Plottings: 3D plots

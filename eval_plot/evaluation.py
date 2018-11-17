@@ -35,7 +35,7 @@ def evaluate(labels_method, groundtruth_labels, data_x = None):
 
 
 # To do a scatter plot of the final result of the kmeans algorithm
-def ploting_v(data_x, n_clusters, lista):
+def ploting_v(data_x, n_clusters, lista, title):
     n_features = data_x.shape[1]
     wh = []
     for i in range(n_clusters):
@@ -56,8 +56,9 @@ def ploting_v(data_x, n_clusters, lista):
                 plt.xlabel("Feature "+str(k1+1))
                 plt.ylabel("Feature "+str(k2+1))
 
-    plt.title('Scatter Plot')
+    plt.suptitle('Scatter Plot: '+title, size=15)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.92)
     plt.show()
 
 # Plot the data in a 3 dimensional space
