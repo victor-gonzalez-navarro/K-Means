@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from eval_plot.evaluation import evaluate
 from eval_plot.evaluation import ploting_v
 from eval_plot.evaluation import ploting_v3d
+from eval_plot.evaluation import plot_corr_matrix
 from algorithms.kmeans import Kmeans
 from algorithms.methods import compute_covariance
 from algorithms.methods import proportion_of_variance
@@ -53,7 +54,7 @@ def main():
     arffs_dic = obtain_arffs('./datasets/')
 
     # Extract an specific database
-    dataset_name = 'waveform'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
+    dataset_name = 'breast-w'       # possible datasets ('hypothyroid', 'breast-w', 'waveform')
     dat1 = arffs_dic[dataset_name]
     df1 = pd.DataFrame(dat1[0])     # original data in pandas dataframe
     groundtruth_labels = df1[df1.columns[len(df1.columns)-1]].values  # original labels in a numpy array
@@ -72,15 +73,13 @@ def main():
 
     # -------------------------------------------------------------------------------Compute covariance and eigenvectors
     original_mean = np.mean(data_x, axis=0)
-    # data_x = data_x-original_mean  # Substracting the mean of the data
-    # original_mean = np.mean(data_x, axis=0)  # Recomputing the mean (checkpoint to check if it is 0 for each feature)
 
     cov_m = compute_covariance(data_x, original_mean)
     eig_vals, eig_vect = np.linalg.eig(cov_m)
 
     idxsort = eig_vals.argsort()[::-1]
-    eig_vals = eig_vals[idxsort]
-    eig_vect = eig_vect[:,idxsort]
+    eig_vals = eig_vals[idxsort].real
+    eig_vect = eig_vect[:,idxsort].real
 
     # ---------------------------------------------------------------------Decide the number of features we want to keep
     prop_variance = 0.9
@@ -93,7 +92,6 @@ def main():
     # ---------------------------------------------------------------------------------Reduce dimensionality of the data
     # A1) Using our implementation of PCA
     transf_data_x = np.dot((eig_vect_red.T), (data_x-original_mean).T).T
-    transf_data_x = transf_data_x.real
 
     # B1) Using the PCA implementation of sklearn
     pca = PCA(n_components=k)
@@ -122,7 +120,6 @@ def main():
     total_error = (np.sum(abs(error))/np.sum(abs(data_x)))*100
     print('The relative error after reconstructing the original matrix with K = ' + str(k) + ' is '+'\033[1m'+'\033['
     '94m'+str(round(total_error,2)) + '%' +'\033[0m'+' [using our implementation of PCA]')
-    # identity_aproximation = np.dot(eig_vect, eig_vect.T)
 
     # B3) Error between original data and reconstruct data 1
     error1 = reconstruct_data_x1-data_x
@@ -152,8 +149,9 @@ def main():
     print('\n---------------------------------------------------------------------------------------------------------')
 
     # -----------------------------------------------------------------------------------------------------Scatter plots
-    ploting_boolean = True
+    ploting_boolean = False
     plot_scatters = False  # only change to True for a database with not too many features (like breast-w)
+
 
     if ploting_boolean:
         # Plot eigenvector
@@ -189,6 +187,8 @@ def main():
         ploting_v3d(transf_data_x, num_clusters, groundtruth_labels, 'transformed data with groundtruth labels')
         # Transfomed data with our implementation of PCA and with the labels obtained with our K-means
         ploting_v3d(transf_data_x, num_clusters, labels, 'transformed data with labels from our K-means')
+        # Plot of the correlation matrix of the dataset
+        plot_corr_matrix(data_x, legend=False)
 
 
 # ----------------------------------------------------------------------------------------------------------------- Init

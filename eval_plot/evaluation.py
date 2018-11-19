@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
@@ -82,3 +83,19 @@ def ploting_v3d(data_x, n_clusters, lista, title):
     plt.title('3 Dimensional Plot of '+title, size=16)
     plt.show()
 
+def plot_corr_matrix(data, legend=False):
+    corr_m = pd.DataFrame(data).corr().values
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    for i in range(corr_m.shape[0]):
+        a = [i + 1] * corr_m.shape[0]
+        b = [x + 1 for x in list(range(corr_m.shape[0]))]
+        c = corr_m[i, :]
+        ax.scatter(a, b, c, label="Feature " + str(i + 1))
+    plt.xlabel("Feature X")
+    plt.ylabel("Feature Y")
+    if (legend):
+        plt.legend()
+    plt.title('3 Dimensional Plot of the Correlation matrix', size=16)
+    plt.show()
